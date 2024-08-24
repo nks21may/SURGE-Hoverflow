@@ -1,8 +1,8 @@
 bl_info = {
-    "name": "SURGE",
+    "name": "SURGE Hoverflow",
     "author": "Kompile",
     "version": (1, 0),
-    "blender": (2, 91, 0),
+    "blender": (4, 2, 1),
     "location": "View3D > Sidebar",
     "description": "Generates surf ramps for source engine games",
     "category": "Add Mesh",
