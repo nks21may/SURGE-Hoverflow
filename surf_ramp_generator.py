@@ -7,6 +7,7 @@ import bpy.utils.previews
 global custom_icons
 custom_icons = bpy.utils.previews.new()
 icons_dir = os.path.join(os.path.dirname(__file__), "icons")
+obj_dir = os.path.join(os.path.dirname(__file__), "objs")
 custom_icons.load("view", os.path.join(icons_dir, "view.png"), "IMAGE")
 custom_icons.load("add", os.path.join(icons_dir, "add.png"), "IMAGE")
 custom_icons.load("name", os.path.join(icons_dir, "name.png"), "IMAGE")
@@ -60,6 +61,18 @@ class SURGE_MainPanel(bpy.types.Panel):
 
         row = layout.row()
         row.operator("surge.add_player", text="Add Player")
+
+        row = layout.row()
+        row.operator("surge.add_bounce_sphere", text="Add Bounce Sphere")
+
+        row = layout.row()
+        row.operator("surge.add_fan", text="Add Fan")
+
+        row = layout.row()
+        row.operator("surge.add_jump_zone", text="Add Jump Zone")
+
+        row = layout.row()
+        row.operator("surge.add_speed_ring", text="Add Speed Ring")
 
 
 class SURGE_GenerateRamp(bpy.types.Operator):
@@ -573,9 +586,7 @@ class SURGE_GenerateRamp(bpy.types.Operator):
             obj.active_material = bpy.data.materials[name]
         # If it doesn't, make one and assign it to the visible mesh.
         else:
-            obj.active_material = bpy.data.materials.new(
-                name=self.material_name
-            )
+            obj.active_material = bpy.data.materials.new(name=self.material_name)
 
         return {"FINISHED"}
 
@@ -601,8 +612,66 @@ class SURGE_AddPlayer(bpy.types.Operator):
     bl_description = "Add a player"
 
     def execute(self, context):
-        bpy.ops.mesh.primitive_cube_add(size=2, location=(0, 0, 0))
+        bpy.ops.mesh.primitive_cube_add(
+            size=2, location=bpy.context.scene.cursor.location
+        )
         bpy.context.active_object.name = "[Player]"
+
+        return {"FINISHED"}
+
+
+class SURGE_AddBounceSphere(bpy.types.Operator):
+    bl_label = "Add Bounce Sphere"
+    bl_idname = "surge.add_bounce_sphere"
+    bl_description = "Add a bounce sphere"
+
+    def execute(self, context):
+        bpy.ops.mesh.primitive_uv_sphere_add(
+            radius=1, location=bpy.context.scene.cursor.location
+        )
+        bpy.context.active_object.name = "[BounceSphere]"
+
+        return {"FINISHED"}
+
+
+class SURGE_AddFan(bpy.types.Operator):
+    bl_label = "Add Fan"
+    bl_idname = "surge.add_fan"
+    bl_description = "Add a fan"
+
+    def execute(self, context):
+        # Load the fan model
+        bpy.ops.mesh.primitive_cylinder_add(
+            radius=1, depth=1, location=bpy.context.scene.cursor.location
+        )
+        bpy.context.active_object.name = "[Fan]"
+
+        return {"FINISHED"}
+
+
+class SURGE_JumpZone(bpy.types.Operator):
+    bl_label = "Add Jump Zone"
+    bl_idname = "surge.add_jump_zone"
+    bl_description = "Add a jump zone"
+
+    def execute(self, context):
+        bpy.ops.mesh.primitive_cube_add(
+            size=2, location=bpy.context.scene.cursor.location
+        )
+        bpy.context.active_object.name = "[JumpZone]"
+        return {"FINISHED"}
+
+
+class SURGE_SpeedRing(bpy.types.Operator):
+    bl_label = "Add Speed Ring"
+    bl_idname = "surge.add_speed_ring"
+    bl_description = "Add a speed ring"
+
+    def execute(self, context):
+        bpy.ops.mesh.primitive_torus_add(
+            location=bpy.context.scene.cursor.location, major_radius=1, minor_radius=0.1
+        )
+        bpy.context.active_object.name = "[SpeedRing]"
 
         return {"FINISHED"}
 
@@ -612,6 +681,10 @@ def register():
     bpy.utils.register_class(SURGE_GenerateRamp)
     bpy.utils.register_class(SURGE_IncreaseView)
     bpy.utils.register_class(SURGE_AddPlayer)
+    bpy.utils.register_class(SURGE_AddBounceSphere)
+    bpy.utils.register_class(SURGE_AddFan)
+    bpy.utils.register_class(SURGE_JumpZone)
+    bpy.utils.register_class(SURGE_SpeedRing)
 
 
 def unregister():
@@ -619,6 +692,10 @@ def unregister():
     bpy.utils.unregister_class(SURGE_GenerateRamp)
     bpy.utils.unregister_class(SURGE_IncreaseView)
     bpy.utils.unregister_class(SURGE_AddPlayer)
+    bpy.utils.unregister_class(SURGE_AddBounceSphere)
+    bpy.utils.unregister_class(SURGE_AddFan)
+    bpy.utils.unregister_class(SURGE_JumpZone)
+    bpy.utils.unregister_class(SURGE_SpeedRing)
 
 
 if __name__ == "__main__":
