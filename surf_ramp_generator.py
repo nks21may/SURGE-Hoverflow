@@ -612,10 +612,9 @@ class SURGE_AddPlayer(bpy.types.Operator):
     bl_description = "Add a player"
 
     def execute(self, context):
-        bpy.ops.mesh.primitive_cube_add(
-            size=2, location=bpy.context.scene.cursor.location
-        )
+        bpy.ops.wm.obj_import(filepath=obj_dir + "/player.obj")
         bpy.context.active_object.name = "[Player]"
+        bpy.context.active_object.location = bpy.context.scene.cursor.location
 
         return {"FINISHED"}
 
@@ -655,10 +654,10 @@ class SURGE_JumpZone(bpy.types.Operator):
     bl_description = "Add a jump zone"
 
     def execute(self, context):
-        bpy.ops.mesh.primitive_cube_add(
-            size=2, location=bpy.context.scene.cursor.location
-        )
+        bpy.ops.wm.obj_import(filepath=obj_dir + "/jump_zone.obj")
         bpy.context.active_object.name = "[JumpZone]"
+        bpy.context.active_object.location = bpy.context.scene.cursor.location
+
         return {"FINISHED"}
 
 
